@@ -1,0 +1,37 @@
+import React, { createContext, useState, useEffect } from 'react';
+import { mockUsers } from '../api/MockData';
+
+export const AuthContext = createContext();
+
+export const AuthProvider = ({ children }) => {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('perfume_user');
+    if (savedUser) {
+      setCurrentUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const login = (email, password) => {
+    const user = mockUsers.find(u => u.email === email && u.password === password);
+    if (user) {
+      const userData = { id: user.id, email: user.email, name: user.name, phone: user.phone };
+      setCurrentUser(userData);
+      localStorage.setItem('perfume_user', JSON.stringify(userData));
+      return { success: true };
+    }
+    return { success: false, message: 'Sai email hoặc mật khẩu' };
+  };
+
+  const logout = () => {
+    setCurrentUser(null);
+    localStorage.removeItem('perfume_user');
+  };
+
+  return (
+    <AuthContext.Provider value={{ currentUser, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

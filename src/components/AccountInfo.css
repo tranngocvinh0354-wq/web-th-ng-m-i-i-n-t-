@@ -1,0 +1,166 @@
+.account-container {
+  padding-top: 180px;
+}
+
+.account-header {
+  background: #f9f9f9;
+  padding: 20px;
+  margin-bottom: 40px;
+  border-radius: 4px;
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.account-avatar {
+  font-size: 48px;
+  flex-shrink: 0;
+}
+
+.account-user-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.account-user-info h2 {
+  font-family: serif;
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.account-user-info p {
+  color: #666;
+  margin: 5px 0 15px 0;
+  font-size: 14px;
+}
+
+.btn-outline {
+  padding: 8px 20px;
+  font-size: 10px;
+  background: none;
+  border: 1px solid #333;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-outline:hover {
+  background: #333;
+  color: white;
+}
+
+.account-section-title {
+  font-family: serif;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
+}
+
+.empty-message {
+  color: #999;
+  font-size: 14px;
+  text-align: center;
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 4px;
+}
+
+.orders-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.order-card {
+  border: 1px solid #eaeaea;
+  padding: 20px;
+  border-radius: 4px;
+  background: white;
+  transition: box-shadow 0.2s;
+}
+
+.order-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  gap: 10px;
+}
+
+.order-id {
+  font-weight: 600;
+  color: #333;
+  min-width: 60px;
+}
+
+.order-date {
+  color: #999;
+  min-width: 100px;
+}
+
+.order-status {
+  color: #8A6E3B;
+  font-weight: 500;
+  text-align: right;
+  flex: 1;
+}
+
+.order-items {
+  padding: 10px 0;
+  font-size: 13px;
+  color: #555;
+}
+
+.order-item {
+  margin: 5px 0;
+  padding: 4px 0;
+}
+
+.order-total {
+  text-align: right;
+  font-weight: 600;
+  font-size: 14px;
+  color: #111;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .account-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .account-user-info {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .order-status {
+    text-align: left;
+  }
+}
