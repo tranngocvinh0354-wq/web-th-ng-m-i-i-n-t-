@@ -8,8 +8,8 @@ export const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart } = useContext(CartContext);
   
-  // Tìm sản phẩm tương ứng theo ID từ URL 
-  const product = perfumeData.find((p) => p.id === parseInt(id));
+  // Đã sửa: Ép kiểu p.id về chuỗi để so sánh đồng nhất với id lấy từ URL
+  const product = perfumeData.find((p) => String(p.id) === id);
 
   if (!product) {
     return (
@@ -26,7 +26,7 @@ export const ProductDetail = () => {
     <div className="container" style={{ paddingTop: '200px', marginBottom: '80px', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '50px' }}>
         
-        {/* hiển thị hình ảnh sản phẩm bên trái */}
+        {/* Hiển thị hình ảnh sản phẩm bên trái */}
         <div style={{ flex: '1 1 450px', background: '#f4f5f6', padding: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img 
             src={product.image} 
@@ -35,7 +35,7 @@ export const ProductDetail = () => {
           />
         </div>
 
-        {/* thông tin chi tiết sản phẩm bên phải */}
+        {/* Thông tin chi tiết sản phẩm bên phải */}
         <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column' }}>
           <span className="category-tag" style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '2px', color: '#666' }}>
             {product.category}
@@ -46,7 +46,8 @@ export const ProductDetail = () => {
           </h1>
           
           <p className="product-price" style={{ fontSize: '20px', fontWeight: '600', margin: '15px 0', color: '#111' }}>
-            {product.price.toLocaleString()} VNĐ
+            {/* Thêm bảo vệ cho giá tiền đề phòng trường hợp thiếu data */}
+            {product.price?.toLocaleString() || '0'} VNĐ
           </p>
           
           <p style={{ fontSize: '14px', lineHeight: '1.8', color: '#555', marginBottom: '40px' }}>
@@ -57,15 +58,26 @@ export const ProductDetail = () => {
           <div className="scent-experience" style={{ marginBottom: '40px' }}>
             <div className="note-box" style={{ borderBottom: '1px solid #eee', paddingBottom: '15px' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG ĐẦU</span>
-              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>{product.notes.top}</p>
+              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
+                {product.notes?.top || 'Đang cập nhật...'}
+              </p>
             </div>
+            
             <div className="note-box" style={{ borderBottom: '1px solid #eee', padding: '15px 0' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG GIỮA</span>
-              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>{product.notes.middle}</p>
+              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
+                {product.notes?.middle || 'Đang cập nhật...'}
+              </p>
             </div>
+            
             <div className="note-box" style={{ borderBottom: '1px solid #eee', padding: '15px 0' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG CUỐI</span>
-              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>{product.notes.base}</p>
+              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+              <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
+                {product.notes?.base || 'Đang cập nhật...'}
+              </p>
             </div>
           </div>
 
