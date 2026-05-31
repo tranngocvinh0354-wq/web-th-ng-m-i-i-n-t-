@@ -8,7 +8,6 @@ export const ProductDetail = () => {
   const { id } = useParams();
   const { addToCart } = useContext(CartContext);
   
-  // Đã sửa: Ép kiểu p.id về chuỗi để so sánh đồng nhất với id lấy từ URL
   const product = perfumeData.find((p) => String(p.id) === id);
 
   if (!product) {
@@ -26,7 +25,6 @@ export const ProductDetail = () => {
     <div className="container" style={{ paddingTop: '200px', marginBottom: '80px', fontFamily: 'sans-serif' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '50px' }}>
         
-        {/* Hiển thị hình ảnh sản phẩm bên trái */}
         <div style={{ flex: '1 1 450px', background: '#f4f5f6', padding: '40px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <img 
             src={product.image} 
@@ -35,7 +33,6 @@ export const ProductDetail = () => {
           />
         </div>
 
-        {/* Thông tin chi tiết sản phẩm bên phải */}
         <div style={{ flex: '1 1 400px', display: 'flex', flexDirection: 'column' }}>
           <span className="category-tag" style={{ fontSize: '11px', fontWeight: 'bold', letterSpacing: '2px', color: '#666' }}>
             {product.category}
@@ -46,7 +43,7 @@ export const ProductDetail = () => {
           </h1>
           
           <p className="product-price" style={{ fontSize: '20px', fontWeight: '600', margin: '15px 0', color: '#111' }}>
-            {/* Thêm bảo vệ cho giá tiền đề phòng trường hợp thiếu data */}
+
             {product.price?.toLocaleString() || '0'} VNĐ
           </p>
           
@@ -54,11 +51,10 @@ export const ProductDetail = () => {
             {product.description}
           </p>
 
-          {/* Trải nghiệm mùi hương chi tiết */}
           <div className="scent-experience" style={{ marginBottom: '40px' }}>
             <div className="note-box" style={{ borderBottom: '1px solid #eee', paddingBottom: '15px' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG ĐẦU</span>
-              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+
               <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
                 {product.notes?.top || 'Đang cập nhật...'}
               </p>
@@ -66,7 +62,7 @@ export const ProductDetail = () => {
             
             <div className="note-box" style={{ borderBottom: '1px solid #eee', padding: '15px 0' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG GIỮA</span>
-              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+
               <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
                 {product.notes?.middle || 'Đang cập nhật...'}
               </p>
@@ -74,14 +70,14 @@ export const ProductDetail = () => {
             
             <div className="note-box" style={{ borderBottom: '1px solid #eee', padding: '15px 0' }}>
               <span className="note-label" style={{ fontSize: '11px', fontWeight: 'bold', color: '#666', letterSpacing: '1px' }}>HƯƠNG CUỐI</span>
-              {/* Đã sửa: Thêm Optional Chaining và giá trị fallback */}
+
               <p style={{ margin: '5px 0 0 0', fontSize: '13px', color: '#333', lineHeight: '1.5' }}>
                 {product.notes?.base || 'Đang cập nhật...'}
               </p>
             </div>
           </div>
 
-          {/* Nút thêm vào túi hàng hiệu */}
+
           <button 
             className="btn-primary" 
             onClick={() => addToCart(product)}

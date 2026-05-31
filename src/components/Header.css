@@ -20,11 +20,8 @@
   font-size: 12px;
   letter-spacing: 1px;
   font-weight: 500;
-  /* Tăng padding 2 bên một chút để viền cong ôm đẹp hơn */
   padding: 10px 24px; 
-  /* Bo tròn thành hình ô van */
   border-radius: 50px; 
-  /* Viền nhạt để giữ khung */
   border: 1px solid #eaeaea; 
   background-color: white;
   /* Đổ bóng mềm mại */
@@ -39,11 +36,9 @@
   background: #f9f9f9;
   /* Bóng đậm và to hơn một chút khi hover */
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); 
-  /* Hiệu ứng nổi/nhấc nút lên nhẹ */
   transform: translateY(-2px); 
 }
 
-/* Giữ nguyên class active nếu có dùng */
 .btn-account.active {
   background: #333;
   color: white;
@@ -110,7 +105,6 @@
 }
 
 .btn-cart:active {
-  /* Hiệu ứng ấn nút xuống */
   transform: translateY(0);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
@@ -162,7 +156,6 @@
     font-size: 11px;
   }
 }
-/* Header.css - thêm */
 .btn-account.active {
   background: #333;
   color: white;

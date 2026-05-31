@@ -10,7 +10,6 @@ import { OrderSummary } from '../components/OrderSummary';
 import './Checkout.css';
 
 export const Checkout = () => {
-  // 1️⃣ GỌI HOOKS TRƯỚC TIÊN
   const cartContext = useContext(CartContext);
   const authContext = useContext(AuthContext);
   const navigate = useNavigate();
@@ -35,7 +34,6 @@ export const Checkout = () => {
     }
   }, [authContext?.currentUser]);
 
-  // 2️⃣ GUARD CHECK (SAU HOOKS)
   if (!cartContext || !authContext) {
     return (
       <div className="checkout-container">
@@ -49,13 +47,11 @@ export const Checkout = () => {
   const { cart, getCartTotal, createOrder } = cartContext;
   const { currentUser } = authContext;
 
-  // Update form field
   const updateFormData = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     setError('');
   };
 
-  // Step 1: Validate delivery info
   const handleDeliverySubmit = (e) => {
     e.preventDefault();
 
@@ -78,7 +74,6 @@ export const Checkout = () => {
     setCurrentStep(2);
   };
 
-  // Step 2: Validate payment method
   const handlePaymentSubmit = (e) => {
     e.preventDefault();
 
@@ -89,8 +84,6 @@ export const Checkout = () => {
 
     setError('');
 
-    // Nếu chọn ngân hàng → đi step 2.5 (QR Code)
-    // Nếu chọn COD → đi step 3 (Order Summary)
     if (formData.paymentMethod === 'bank') {
       setCurrentStep(2.5);
     } else {
@@ -98,13 +91,11 @@ export const Checkout = () => {
     }
   };
 
-  // Step 2.5: QR Code Payment Confirmed
   const handleQRCodeConfirm = () => {
     setError('');
     setCurrentStep(3);
   };
 
-  // Step 3: Submit order
   const handleSubmitOrder = async () => {
     if (!currentUser) {
       setError('Vui lòng đăng nhập trước khi mua hàng');
@@ -141,7 +132,6 @@ export const Checkout = () => {
     }
   };
 
-  // Step indicators - hiển thị 4 bước nếu chọn bank, 3 bước nếu COD
   const steps = [
     { number: 1, label: 'Thông tin giao hàng' },
     { number: 2, label: 'Phương thức thanh toán' },
@@ -159,7 +149,6 @@ export const Checkout = () => {
 
       {error && <div className="error-message">{error}</div>}
 
-      {/* Step 1: Delivery Info */}
       {currentStep === 1 && (
         <DeliveryForm
           formData={formData}
@@ -168,7 +157,6 @@ export const Checkout = () => {
         />
       )}
 
-      {/* Step 2: Payment Method */}
       {currentStep === 2 && (
         <PaymentForm
           paymentMethod={formData.paymentMethod}
@@ -178,7 +166,6 @@ export const Checkout = () => {
         />
       )}
 
-      {/* Step 2.5: QR Code Payment (chỉ hiển thị nếu chọn bank) */}
       {currentStep === 2.5 && (
         <QRCodePayment
           total={getCartTotal()}
@@ -187,7 +174,6 @@ export const Checkout = () => {
         />
       )}
 
-      {/* Step 3: Order Confirmation */}
       {currentStep === 3 && (
         <OrderConfirmation
           formData={formData}
@@ -196,7 +182,6 @@ export const Checkout = () => {
           isSubmitting={isSubmitting}
           onSubmit={handleSubmitOrder}
           onBack={() => {
-            // Quay lại step 2 nếu chọn bank, hoặc step 2 nếu COD
             if (formData.paymentMethod === 'bank') {
               setCurrentStep(2.5);
             } else {

@@ -4,7 +4,6 @@ import { CartContext } from '../context/CartContext';
 export const CartButton = () => {
   const context = useContext(CartContext);
 
-  // Guard: nếu CartContext không tồn tại
   if (!context) {
     console.error('CartButton must be used inside CartContext provider');
     return null;

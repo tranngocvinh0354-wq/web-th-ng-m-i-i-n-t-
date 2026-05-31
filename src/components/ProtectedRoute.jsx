@@ -7,10 +7,8 @@ export const ProtectedRoute = ({ children }) => {
   const location = useLocation();
 
   if (!currentUser) {
-    // Chưa đăng nhập -> Đẩy về trang Account và lưu lại link gốc
     return <Navigate to="/account" state={{ from: location }} replace />;
   }
 
-  // Đã đăng nhập -> Cho phép đi tiếp vào Checkout
   return children;
 };

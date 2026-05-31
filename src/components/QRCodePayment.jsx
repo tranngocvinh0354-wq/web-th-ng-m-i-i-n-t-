@@ -13,21 +13,17 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
   const [qrValue, setQrValue] = useState('');
   const [isExpired, setIsExpired] = useState(false);
 
-  // Generate QR code data - wrapped in useCallback
   const generateQRCode = useCallback(() => {
-    // QR value: formatted bank transfer info
     const qrData = `${BANK_INFO.bankName}|${BANK_INFO.accountNumber}|${BANK_INFO.accountHolder}|${total}`;
     setQrValue(qrData);
     setTimeLeft(60);
     setIsExpired(false);
   }, [total]);
 
-  // Generate QR on mount
   useEffect(() => {
     generateQRCode();
   }, [generateQRCode]);
 
-  // Countdown timer
   useEffect(() => {
     if (timeLeft <= 0) {
       setIsExpired(true);
@@ -65,7 +61,6 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
       <div className="qr-payment-container">
         <h2 className="qr-title">Chuyển khoản ngân hàng</h2>
 
-        {/* QR Code Section */}
         <div className="qr-section">
           <div
             className={`qr-code-box ${isExpired ? 'expired' : ''}`}
@@ -81,14 +76,12 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
             )}
           </div>
 
-          {/* Countdown Timer */}
           <div className={`qr-timer ${isExpired ? 'expired' : ''}`}>
             <span className="timer-label">Hết hạn trong:</span>
             <span className="timer-value">{formatTime(timeLeft)}</span>
             {isExpired && <span className="expired-text">Mã QR đã hết hạn</span>}
           </div>
 
-          {/* Refresh Button */}
           <button
             className="btn btn-secondary"
             onClick={generateQRCode}
@@ -97,7 +90,6 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
             🔄 LÀM MỚI MÃ QR
           </button>
 
-          {/* Download Button */}
           <button
             className="btn btn-secondary"
             onClick={downloadQR}
@@ -107,7 +99,6 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
           </button>
         </div>
 
-        {/* Bank Info Section */}
         <div className="bank-info-section">
           <h3 className="bank-info-title">Thông tin chuyển khoản</h3>
 
@@ -137,7 +128,6 @@ export const QRCodePayment = ({ total, onConfirm, onBack }) => {
         </div>
       </div>
 
-      {/* Actions */}
       <div className="checkout-actions">
         <button className="btn btn-outline" onClick={onBack}>
           QUAY LẠI

@@ -11,13 +11,11 @@ export const AuthProvider = ({ children }) => {
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       
-      // KIỂM TRA THÔNG MINH: Xem user trong máy có còn tồn tại trong MockData hiện tại không?
       const isValidUser = mockUsers.find(u => u.email === parsedUser.email);
       
       if (isValidUser) {
-        setCurrentUser(parsedUser); // Nếu đúng là Trần Văn A (hoặc user hợp lệ) thì cho qua
+        setCurrentUser(parsedUser); 
       } else {
-        // Nếu là dữ liệu cũ (như Nguyễn Thị Thanh), tự động xóa sạch
         localStorage.removeItem('perfume_user');
         setCurrentUser(null);
       }

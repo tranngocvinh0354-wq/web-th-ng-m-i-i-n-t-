@@ -21,7 +21,6 @@ export const OrderSummary = ({
       <div className="order-summary">
         <h2 className="order-summary-title">TÓM TẮT ĐƠN HÀNG</h2>
 
-        {/* Items */}
         <div className="order-items">
           {items.map((item) => (
             <div key={item.id} className="order-item">
@@ -36,13 +35,11 @@ export const OrderSummary = ({
           ))}
         </div>
 
-        {/* Total */}
         <div className="order-total">
           <span>Tổng cộng:</span>
           <span className="total-amount">{total.toLocaleString('vi-VN')} đ</span>
         </div>
 
-        {/* Delivery Info */}
         <div className="order-delivery-info">
           <h3 className="delivery-info-title">Thông tin giao hàng</h3>
           <div className="delivery-info-item">

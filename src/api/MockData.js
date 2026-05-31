@@ -1,5 +1,3 @@
-// src/api/MockData.js
-
 export const perfumeData = [
   // ================= NHÓM HƯƠNG HOA (FLORAL) =================
   {
@@ -54,16 +52,16 @@ export const mockUsers = [
     email: 'tranvanA@123.com', 
     password: 'password123',
     name: 'Trần Văn A',
-    phone: '0901234567', // Có thể dùng số điện thoại này làm định danh VIP
+    phone: '0901234567', 
     isVIP: true,
     role: 'customer'
   },
   {
     id: 2,
-    email: 'khachhang@123.com', // Đã sửa từ username thành email để qua được bước validate form
+    email: 'khachhang@123.com', 
     password: '123',
     name: 'Khách hàng',
-    phone: '0987654321', // Số điện thoại định danh khách hàng thường
+    phone: '0987654321', 
     isVIP: false,
     role: 'customer'
   }

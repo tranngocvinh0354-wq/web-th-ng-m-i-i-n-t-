@@ -41,10 +41,8 @@ export const Home = () => {
   
   const { addToCart } = cartContext;
   
-  // Dùng hook filter
   const filteredProducts = useProductFilter(perfumeData, activeFilter);
   
-  // Guard context
   if (!cartContext) {
     console.error('Home must be inside CartContext provider');
     return null;
@@ -100,7 +98,6 @@ export const Home = () => {
   );
 };
 
-// Product Card Component
 const ProductCard = ({ product, onAddToCart }) => {
   const [isAdding, setIsAdding] = useState(false);
 
@@ -108,7 +105,6 @@ const ProductCard = ({ product, onAddToCart }) => {
     setIsAdding(true);
     try {
       onAddToCart(product);
-      // Optional: show toast notification
       setTimeout(() => setIsAdding(false), 300);
     } catch (error) {
       console.error('Error adding to cart:', error);
