@@ -1,119 +1,252 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
+import { StepIndicator } from '../components/StepIndicator';
+import { DeliveryForm } from '../components/DeliveryForm';
+import { PaymentForm } from '../components/PaymentForm';
+import { QRCodePayment } from '../components/QRCodePayment';
+import { OrderSummary } from '../components/OrderSummary';
 import './Checkout.css';
 
 export const Checkout = () => {
-  const { cart, getCartTotal, createOrder } = useContext(CartContext);
-  const { currentUser } = useContext(AuthContext);
+  // 1️⃣ GỌI HOOKS TRƯỚC TIÊN
+  const cartContext = useContext(CartContext);
+  const authContext = useContext(AuthContext);
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
-  const [fullname, setFullname] = useState(currentUser ? currentUser.name : '');
-  const [phone, setPhone] = useState(currentUser ? currentUser.phone : '');
-  const [address, setAddress] = useState('');
-  const [paymentMethod, setPaymentMethod] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+  const [formData, setFormData] = useState({
+    fullname: '',
+    phone: '',
+    address: '',
+    paymentMethod: '',
+  });
 
-  const handleNextStep1 = (e) => {
+  useEffect(() => {
+    if (authContext?.currentUser) {
+      setFormData((prev) => ({
+        ...prev,
+        fullname: authContext.currentUser.name || '',
+        phone: authContext.currentUser.phone || '',
+      }));
+    }
+  }, [authContext?.currentUser]);
+
+  // 2️⃣ GUARD CHECK (SAU HOOKS)
+  if (!cartContext || !authContext) {
+    return (
+      <div className="checkout-container">
+        <p style={{ textAlign: 'center', color: '#999', padding: '40px' }}>
+          Có lỗi xảy ra. Vui lòng thử lại.
+        </p>
+      </div>
+    );
+  }
+
+  const { cart, getCartTotal, createOrder } = cartContext;
+  const { currentUser } = authContext;
+
+  // Update form field
+  const updateFormData = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError('');
+  };
+
+  // Step 1: Validate delivery info
+  const handleDeliverySubmit = (e) => {
     e.preventDefault();
-    if (!fullname || !phone || !address) return alert('Vui lòng điền đầy đủ thông tin');
+
+    if (!formData.fullname.trim()) {
+      setError('Vui lòng nhập họ tên');
+      return;
+    }
+
+    if (!formData.phone.trim()) {
+      setError('Vui lòng nhập số điện thoại');
+      return;
+    }
+
+    if (!formData.address.trim()) {
+      setError('Vui lòng nhập địa chỉ');
+      return;
+    }
+
+    setError('');
     setCurrentStep(2);
   };
 
-  const handleNextStep2 = (e) => {
+  // Step 2: Validate payment method
+  const handlePaymentSubmit = (e) => {
     e.preventDefault();
-    if (!paymentMethod) return alert('Vui lòng chọn phương thức thanh toán');
+
+    if (!formData.paymentMethod) {
+      setError('Vui lòng chọn phương thức thanh toán');
+      return;
+    }
+
+    setError('');
+
+    // Nếu chọn ngân hàng → đi step 2.5 (QR Code)
+    // Nếu chọn COD → đi step 3 (Order Summary)
+    if (formData.paymentMethod === 'bank') {
+      setCurrentStep(2.5);
+    } else {
+      setCurrentStep(3);
+    }
+  };
+
+  // Step 2.5: QR Code Payment Confirmed
+  const handleQRCodeConfirm = () => {
+    setError('');
     setCurrentStep(3);
   };
 
-  const handleSubmitOrder = () => {
+  // Step 3: Submit order
+  const handleSubmitOrder = async () => {
     if (!currentUser) {
-      alert('Vui lòng đăng nhập trước khi mua hàng');
-      return navigate('/account');
+      setError('Vui lòng đăng nhập trước khi mua hàng');
+      return;
     }
-    if (cart.length === 0) return alert('Giỏ hàng của bạn đang trống');
 
-    createOrder({ fullname, phone, address }, paymentMethod, currentUser.id);
-    alert('Đặt hàng thành công!');
-    navigate('/account');
+    if (cart.length === 0) {
+      setError('Giỏ hàng của bạn đang trống');
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const orderData = {
+        fullname: formData.fullname,
+        phone: formData.phone,
+        address: formData.address,
+      };
+
+      createOrder(orderData, formData.paymentMethod, currentUser.id);
+
+      navigate('/account', {
+        state: {
+          message: 'Đặt hàng thành công! Kiểm tra lịch sử đơn hàng của bạn.',
+        },
+      });
+    } catch (err) {
+      setError(
+        err.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.'
+      );
+      setIsSubmitting(false);
+    }
   };
 
+  // Step indicators - hiển thị 4 bước nếu chọn bank, 3 bước nếu COD
+  const steps = [
+    { number: 1, label: 'Thông tin giao hàng' },
+    { number: 2, label: 'Phương thức thanh toán' },
+    ...(formData.paymentMethod === 'bank'
+      ? [{ number: 2.5, label: 'Xác nhận QR' }]
+      : []),
+    { number: 3, label: 'Xác nhận đơn hàng' },
+  ];
+
   return (
-    <div className="checkout-container" style={{ paddingTop: '18px' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '30px', fontFamily: 'serif', letterSpacing: '2px' }}>THANH TOÁN</h1>
-      
-      <div className="checkout-steps" style={{ display: 'flex', justifyContent: 'center', gap: '40px', marginBottom: '40px' }}>
-        <div className={`step ${currentStep === 1 ? 'active' : currentStep > 1 ? 'completed' : ''}`}>
-          <div className="step-number">1</div><div className="step-label">Thông tin giao hàng</div>
-        </div>
-        <div className={`step ${currentStep === 2 ? 'active' : currentStep > 2 ? 'completed' : ''}`}>
-          <div className="step-number">2</div><div className="step-label">Phương thức thanh toán</div>
-        </div>
-        <div className={`step ${currentStep === 3 ? 'active' : ''}`}>
-          <div className="step-number">3</div><div className="step-label">Xác nhận đơn hàng</div>
-        </div>
-      </div>
+    <div className="checkout-container">
+      <h1 className="checkout-title">THANH TOÁN</h1>
 
+      <StepIndicator steps={steps} currentStep={currentStep} />
+
+      {error && <div className="error-message">{error}</div>}
+
+      {/* Step 1: Delivery Info */}
       {currentStep === 1 && (
-        <form onSubmit={handleNextStep1} className="checkout-form" style={{ maxWidth: '450px', margin: '0 auto' }}>
-          <div className="form-group">
-            <label>HỌ TÊN</label>
-            <input type="text" value={fullname} onChange={(e) => setFullname(e.target.value)} required />
-          </div>
-          <div className="form-group" style={{ marginTop: '15px' }}>
-            <label>SỐ ĐIỆN THOẠI</label>
-            <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} required />
-          </div>
-          <div className="form-group" style={{ marginTop: '15px' }}>
-            <label>ĐỊA CHỈ</label>
-            <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Số nhà, đường, quận..." required />
-          </div>
-          <button className="btn-primary w-100" type="submit" style={{ marginTop: '25px', padding: '14px' }}>TIẾP TỤC</button>
-        </form>
-      )}
-      
-      {currentStep === 2 && (
-        <form onSubmit={handleNextStep2} className="checkout-form" style={{ maxWidth: '450px', margin: '0 auto' }}>
-          <div className="form-group">
-            <label>CHỌN PHƯƠNG THỨC THANH TOÁN</label>
-            <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} required style={{ padding: '12px', width: '100%' }}>
-              <option value="">-- Chọn --</option>
-              <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-              <option value="bank">Chuyển khoản ngân hàng</option>
-            </select>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '25px' }}>
-            <button className="btn-outline" type="button" onClick={() => setCurrentStep(1)}>QUAY LẠI</button>
-            <button className="btn-primary" type="submit">TIẾP TỤC</button>
-          </div>
-        </form>
+        <DeliveryForm
+          formData={formData}
+          onUpdate={updateFormData}
+          onSubmit={handleDeliverySubmit}
+        />
       )}
 
+      {/* Step 2: Payment Method */}
+      {currentStep === 2 && (
+        <PaymentForm
+          paymentMethod={formData.paymentMethod}
+          onUpdate={(value) => updateFormData('paymentMethod', value)}
+          onSubmit={handlePaymentSubmit}
+          onBack={() => setCurrentStep(1)}
+        />
+      )}
+
+      {/* Step 2.5: QR Code Payment (chỉ hiển thị nếu chọn bank) */}
+      {currentStep === 2.5 && (
+        <QRCodePayment
+          total={getCartTotal()}
+          onConfirm={handleQRCodeConfirm}
+          onBack={() => setCurrentStep(2)}
+        />
+      )}
+
+      {/* Step 3: Order Confirmation */}
       {currentStep === 3 && (
-        <div className="checkout-form" style={{ maxWidth: '550px', margin: '0 auto' }}>
-          <div className="order-summary" style={{ background: '#f9f9f9', padding: '25px', marginBottom: '25px' }}>
-            <h3 style={{ fontFamily: 'serif', marginBottom: '15px' }}>TÓM TẮT ĐƠN HÀNG</h3>
-            {cart.map((item) => (
-              <div className="summary-item" key={item.id} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', marginBottom: '8px' }}>
-                <span>{item.name} x{item.quantity}</span>
-                <span>{(item.price * item.quantity).toLocaleString()}đ</span>
-              </div>
-            ))}
-            <div className="summary-total" style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #ddd', paddingTop: '15px', fontWeight: 'bold', marginTop: '15px' }}>
-              <span>Tổng cộng:</span><span>{getCartTotal().toLocaleString()}đ</span>
-            </div>
-            <div style={{ marginTop: '20px', fontSize: '13px', borderTop: '1px solid #eee', paddingTop: '10px' }}>
-              <strong>Địa chỉ nhận hàng:</strong> {fullname} - {phone} ({address}) <br />
-              <strong>Hình thức:</strong> {paymentMethod === 'cod' ? 'COD' : 'Chuyển khoản'}
-            </div>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <button className="btn-outline" type="button" onClick={() => setCurrentStep(2)}>QUAY LẠI</button>
-            <button className="btn-primary" type="button" onClick={handleSubmitOrder}>XÁC NHẬN ĐẶT HÀNG</button>
-          </div>
-        </div>
+        <OrderConfirmation
+          formData={formData}
+          cart={cart}
+          total={getCartTotal()}
+          isSubmitting={isSubmitting}
+          onSubmit={handleSubmitOrder}
+          onBack={() => {
+            // Quay lại step 2 nếu chọn bank, hoặc step 2 nếu COD
+            if (formData.paymentMethod === 'bank') {
+              setCurrentStep(2.5);
+            } else {
+              setCurrentStep(2);
+            }
+          }}
+        />
       )}
     </div>
   );
 };
+
+// ==================== ORDER CONFIRMATION COMPONENT ====================
+const OrderConfirmation = ({
+  formData,
+  cart,
+  total,
+  isSubmitting,
+  onSubmit,
+  onBack,
+}) => {
+  return (
+    <div className="checkout-form-wrapper">
+      <OrderSummary
+        items={cart}
+        total={total}
+        fullname={formData.fullname}
+        phone={formData.phone}
+        address={formData.address}
+        paymentMethod={formData.paymentMethod}
+      />
+
+      <div className="checkout-actions">
+        <button
+          className="btn btn-outline"
+          onClick={onBack}
+          disabled={isSubmitting}
+        >
+          QUAY LẠI
+        </button>
+        <button
+          className="btn btn-primary"
+          onClick={onSubmit}
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'ĐANG XỬ LÝ...' : 'XÁC NHẬN ĐẶT HÀNG'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default Checkout;

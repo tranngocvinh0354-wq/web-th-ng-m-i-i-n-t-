@@ -3,7 +3,7 @@ import './LoginForm.css';
 
 const DEMO_CREDENTIALS = {
   email: 'tranvanA@123.com',
-  password: '123456',
+  password: 'password123',
 };
 
 export const LoginForm = ({ onSubmit, error: externalError, isLoading }) => {
@@ -78,7 +78,7 @@ export const LoginForm = ({ onSubmit, error: externalError, isLoading }) => {
               setPassword(e.target.value);
               setValidationError('');
             }}
-            placeholder="123456"
+            placeholder="password123"
             required
             disabled={isLoading}
             aria-label="Password"
