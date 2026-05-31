@@ -53,7 +53,7 @@ export const mockUsers = [
     id: 1,
     email: 'tranvanA@123.com', 
     password: 'password123',
-    name: 'Ngọc Vinh',
+    name: 'Trần Văn A',
     phone: '0901234567', // Có thể dùng số điện thoại này làm định danh VIP
     isVIP: true,
     role: 'customer'

@@ -93,7 +93,7 @@ export const Home = () => {
       {/* ================= FOOTER ================= */}
       <footer className="home-footer">
         <p className="home-footer-text">
-          &copy; {new Date().getFullYear()} CHANEL STYLE PROJECT
+          &copy; {new Date().getFullYear()} CHANEL STYLE 
         </p>
       </footer>
     </div>

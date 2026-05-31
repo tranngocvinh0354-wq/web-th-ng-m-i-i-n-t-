@@ -9,6 +9,7 @@ import { Home } from './pages/Home';
 import { Account } from './pages/Account';
 import { Checkout } from './pages/Checkout';
 import { ProductDetail } from './pages/ProductDetail';
+import { ProtectedRoute } from './components/ProtectedRoute'; // Đã import màng lọc bảo vệ
 
 function App() {
   return (
@@ -20,8 +21,17 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/account" element={<Account />} />
-              <Route path="/checkout" element={<Checkout />} />
               <Route path="/product/:id" element={<ProductDetail />} />
+              
+              {/* Trang Checkout đã được bọc lại để bảo mật */}
+              <Route 
+                path="/checkout" 
+                element={
+                  <ProtectedRoute>
+                    <Checkout />
+                  </ProtectedRoute>
+                } 
+              />
             </Routes>
             <CartDrawer />
           </div>

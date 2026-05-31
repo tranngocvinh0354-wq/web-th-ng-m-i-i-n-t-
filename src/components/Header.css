@@ -20,10 +20,16 @@
   font-size: 12px;
   letter-spacing: 1px;
   font-weight: 500;
-  padding: 8px 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: all 0.3s;
+  /* Tăng padding 2 bên một chút để viền cong ôm đẹp hơn */
+  padding: 10px 24px; 
+  /* Bo tròn thành hình ô van */
+  border-radius: 50px; 
+  /* Viền nhạt để giữ khung */
+  border: 1px solid #eaeaea; 
+  background-color: white;
+  /* Đổ bóng mềm mại */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); 
+  transition: all 0.3s ease;
   display: inline-block;
   text-transform: uppercase;
 }
@@ -31,6 +37,18 @@
 .btn-account:hover {
   border-color: #333;
   background: #f9f9f9;
+  /* Bóng đậm và to hơn một chút khi hover */
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12); 
+  /* Hiệu ứng nổi/nhấc nút lên nhẹ */
+  transform: translateY(-2px); 
+}
+
+/* Giữ nguyên class active nếu có dùng */
+.btn-account.active {
+  background: #333;
+  color: white;
+  border-color: #333;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .header-center {
@@ -70,27 +88,38 @@
 }
 
 .btn-cart {
-  background: none;
-  border: none;
+  background-color: white;
+  border: 1px solid #eaeaea;
   cursor: pointer;
   font-size: 16px;
   position: relative;
-  padding: 8px 12px;
-  transition: transform 0.2s;
+  padding: 10px 24px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-cart:hover {
-  transform: scale(1.1);
+  border-color: #333;
+  background: #f9f9f9;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
 }
 
 .btn-cart:active {
-  transform: scale(0.95);
+  /* Hiệu ứng ấn nút xuống */
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
+
 
 .cart-badge {
   position: absolute;
   top: -5px;
-  right: -5px;
+  right: 5px; 
   background: #8b0000;
   color: white;
   border-radius: 50%;
@@ -103,7 +132,6 @@
   font-weight: 600;
   line-height: 1;
 }
-
 @media (max-width: 768px) {
   .header-container {
     flex-wrap: wrap;
